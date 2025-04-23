@@ -6,63 +6,42 @@
 #include "emp/math/Random.hpp"
 
 #include "Organism.h"
-#include "Prey.h"
-#include "Predator.h"
 
 class OrgWorld : public emp::World<Organism> {
+
     emp::Random &random;
+    emp::Ptr<emp::Random> random_ptr;
 
-public:
-    OrgWorld(emp::Random &_random)
-        : emp::World<Organism>(_random), random(_random) {}
+    public:
 
-    ~OrgWorld() {}
+        OrgWorld(emp::Random &_random) : emp::World<Organism>(_random), random(_random) {
 
-    void Update() {
-        // First, let the base World class handle its updates
-        emp::World<Organism>::Update();
+            random_ptr.New(_random);
 
-        // a. Process each organism
-        emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
-        for (size_t i : schedule) {
-            if (!IsOccupied(i)) continue;
-            Organism* organism = pop[i];
-            organism->AddHealth(5);
-            organism->AddHunger(5);
-            MoveOrganism(i);
         }
 
-        // b. Check for reproduction
-        emp::vector<size_t> repro_schedule = emp::GetPermutation(random, GetSize());
-        for (size_t i : repro_schedule) {
-            if (IsOccupied(i)) {
-                emp::Ptr<Organism> offspring = pop[i]->CheckReproduction();
-                if (offspring) {
-                    DoBirth(*offspring, i); // Add offspring at the parent's location
+        ~OrgWorld() {}
+
+        void Update() {
+
+            emp::World<Organism>::Update();
+
+            emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
+
+            for (int i : schedule) {
+
+                if (!IsOccupied(i)) {
+
+                    continue;
+
                 }
+
+                Organism* org = pop[i];
+
+                org->Process(25);
+
             }
         }
-    }
-
-    emp::Ptr<Organism> ExtractOrganism(size_t location) {
-        if (!IsOccupied(location)) return nullptr;
-        emp::Ptr<Organism> organism = pop[location];
-        pop[location] = nullptr;
-        return organism;
-    }
-
-    void MoveOrganism(size_t old_location) {
-        if (!IsOccupied(old_location)) return;
-        emp::Ptr<Organism> organism = ExtractOrganism(old_location);
-        if (organism) {
-            emp::WorldPosition new_location = GetRandomNeighborPos(old_location);
-            if (!IsOccupied(new_location)) {
-                AddOrgAt(organism, new_location);
-            } else {
-                AddOrgAt(organism, old_location); // Put back if no move
-            }
-        }
-    }
 };
 
 #endif
