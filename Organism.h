@@ -8,36 +8,52 @@ class Organism {
 
     private:
 
-        double points;
+        double health;
         emp::Ptr<emp::Random> random;
 
     public:
 
-        Organism(emp::Ptr<emp::Random> _random, double _points=0.0) :
-            points(_points), random(_random) {;}
+        Organism(emp::Ptr<emp::Random> _random, double _health=0.0) :
+            health(_health), random(_random) {;}
 
-        void SetPoints(double _in) {
-            
-            points = _in;
+        virtual std::string GetType() {
+
+            return "Organism";
         }
 
-        void AddPoints(double _in) {
+        double GetHealth() {
             
-            points += _in;
+            return health;
         }
 
-        void Process(int _points) {
+        emp::Ptr<emp::Random> GetRandom() {
+
+            return random;
+
+        }
+
+        void SetHealth(double _in) {
             
-            points = points + _points;
+            health = _in;
+        }
+
+        void AddHealth(double _in) {
+            
+            health += _in;
+        }
+
+        virtual void Process(int _health) {
+            
+            AddHealth(_health);
         
         }
 
-        emp::Ptr<Organism> CheckReproduction() {
+        virtual emp::Ptr<Organism> CheckReproduction() {
 
-            if (points >= 1000) {
+            if (health >= 1000) {
 
                 emp::Ptr<Organism> offspring = new Organism(random, 0);
-                points = points - 1000;
+                health = health - 1000;
                 return offspring;
             }
 

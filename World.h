@@ -11,6 +11,7 @@ class OrgWorld : public emp::World<Organism> {
 
     emp::Random &random;
     emp::Ptr<emp::Random> random_ptr;
+    double weather;
 
     public:
 
@@ -18,14 +19,22 @@ class OrgWorld : public emp::World<Organism> {
         random_ptr.New(_random);
     }
 
-    ~OrgWorld() {
+    ~OrgWorld() {}
+
+    double UpdateWeather() {
+
+        weather = random.GetDouble(0, 1);
+
+        return weather;
     }
 
     void Update() {
 
         // First, let the base World class handle its updates
         emp::World<Organism>::Update();
-    
+
+        double current_weather = UpdateWeather();
+
         emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
     
             for (int i : schedule) {
@@ -35,11 +44,13 @@ class OrgWorld : public emp::World<Organism> {
                     continue; 
                 }
     
-                Organism* organism = pop[i];
-                organism->Process(100);
+                emp::Ptr<Organism> organism = ExtractOrganism(i);
+                organism->Process(current_weather);
+                emp::WorldPosition randNeighborPos = GetRandomNeighborPos(i);
+                AddOrgAt(organism, randNeighborPos);
             }
     
-        // d. Create another schedule for checking reproduction after everyone has received points
+        // d. Create another schedule for checking reproduction after everyone has received health
         emp::vector<size_t> repro_schedule = emp::GetPermutation(random, GetSize());
     
             // Loop through the reproduction schedule
@@ -52,12 +63,22 @@ class OrgWorld : public emp::World<Organism> {
     
                     if (offspring) {
     
-                        DoBirth(*offspring, i); // Add the offspring to the population
+                        AddOrgAt(offspring, GetRandomNeighborPos(i)); // Add the offspring to the population
                     
                     }
                 }
             }
         }
+
+        emp::Ptr<Organism> ExtractOrganism(int position) {
+
+            emp::Ptr<Organism> organism = pop[position];
+            pop[position] = nullptr;
+
+            return organism;
+        }
+
+
 
 };
 #endif
