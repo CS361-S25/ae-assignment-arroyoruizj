@@ -4,7 +4,6 @@
 #include "emp/Evolve/World.hpp"
 #include "emp/math/random_utils.hpp"
 #include "emp/math/Random.hpp"
-
 #include "Organism.h"
 
 class OrgWorld : public emp::World<Organism> {
@@ -24,8 +23,22 @@ class OrgWorld : public emp::World<Organism> {
     double UpdateWeather() {
 
         weather = random.GetDouble(0, 1);
-
         return weather;
+    }
+
+    std::string GetWeather() {
+
+        if (weather < 0.5) { //rainy, we are in seattle
+            
+            return "Rainy";
+        } 
+
+        else if (weather < 0.85) { //cloud
+
+            return "Cloudy";
+        }
+
+        return "Sunny";
     }
 
     void Update() {
@@ -35,9 +48,9 @@ class OrgWorld : public emp::World<Organism> {
 
         double current_weather = UpdateWeather();
 
-        emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
+        emp::vector<size_t> weather_schedule = emp::GetPermutation(random, GetSize());
     
-            for (int i : schedule) {
+            for (int i : weather_schedule) {
     
                 if (!IsOccupied(i)) {
     
@@ -55,9 +68,37 @@ class OrgWorld : public emp::World<Organism> {
                 } else {
 
                     AddOrgAt(organism, i);
-                }
-                
+                } 
             }
+
+        emp::vector<size_t> eat_schedule = emp::GetPermutation(random, GetSize());
+
+        for (int i : eat_schedule) {
+
+            if (!IsOccupied(i)) {
+
+                continue; 
+            }
+            
+            emp::Ptr<Organism> organism = pop[i]; // Do not extract the organism here
+
+            if (organism->GetType() == "Cricket") {
+
+                emp::vector<size_t> neighbors = GetValidNeighborOrgIDs(i);
+
+                for (int neighborIndex : neighbors) {
+
+                    if (pop[neighborIndex]) {
+
+                        emp::Ptr<Organism> neighbor = ExtractOrganism(neighborIndex); // Do not extract the neighbor
+                        organism->Eat(neighbor);
+                        
+                    }
+                }
+            }
+        }
+
+
     
         // d. Create another schedule for checking reproduction after everyone has received health
         emp::vector<size_t> repro_schedule = emp::GetPermutation(random, GetSize());
@@ -77,15 +118,16 @@ class OrgWorld : public emp::World<Organism> {
                     }
                 }
             }
-        }
+    }
 
-        emp::Ptr<Organism> ExtractOrganism(int position) {
+    emp::Ptr<Organism> ExtractOrganism(int position) {
 
-            emp::Ptr<Organism> organism = pop[position];
-            pop[position] = nullptr;
+        emp::Ptr<Organism> organism = pop[position];
+        pop[position] = nullptr;
 
-            return organism;
-        }
+        return organism;
+    }
 
 };
+
 #endif

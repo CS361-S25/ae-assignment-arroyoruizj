@@ -61,12 +61,16 @@ class Cricket : public Organism {
             AddHunger(1);
         }
 
-        void EatGrass(emp::Ptr<Organism> neighbor) {
+        void Eat(emp::Ptr<Organism> neighbor) override{
 
             if (neighbor->GetType() == "Grass") {
 
                 AddHealth(10);
                 AddHunger(-5);
+
+            } else {
+
+                AddHunger(1);
             }
         }
 
