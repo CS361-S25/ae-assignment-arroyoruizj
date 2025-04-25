@@ -43,11 +43,20 @@ class OrgWorld : public emp::World<Organism> {
     
                     continue; 
                 }
-    
+                
                 emp::Ptr<Organism> organism = ExtractOrganism(i);
                 organism->Process(current_weather);
-                emp::WorldPosition randNeighborPos = GetRandomNeighborPos(i);
-                AddOrgAt(organism, randNeighborPos);
+
+                if (organism->GetType() == "Cricket") {
+
+                    emp::WorldPosition randNeighborPos = GetRandomNeighborPos(i);
+                    AddOrgAt(organism, randNeighborPos);
+
+                } else {
+
+                    AddOrgAt(organism, i);
+                }
+                
             }
     
         // d. Create another schedule for checking reproduction after everyone has received health
