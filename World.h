@@ -78,7 +78,5 @@ class OrgWorld : public emp::World<Organism> {
             return organism;
         }
 
-
-
 };
 #endif

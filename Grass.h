@@ -39,12 +39,12 @@ class Grass : public Organism {
             water += _in;
         }
 
-        void Process(double weather) {
+        void Process(double weather) override{
             
             if (weather < 0.5) { //rainy, we are in seattle
 
                 AddWater(5);
-                AddSunshine(1);
+                AddSunshine(3);
             } 
 
             else if (weather < 0.85) { //cloud
@@ -60,16 +60,18 @@ class Grass : public Organism {
             }
 
             Organism::AddHealth(10);
+
         }
 
-        emp::Ptr<Organism> CheckReproduction() override{
+        emp::Ptr<Organism> CheckReproduction() override {
 
-            if ((Organism::GetHealth() >= 50) && (water == 10) && (sunshine == 10)) {
+            if (Organism::GetHealth() >= 50 && water > 15 && sunshine > 15) {
 
                 emp::Ptr<Organism> offspring = new Grass(Organism::GetRandom());
                 Organism::AddHealth(-50);
-                AddWater(-10);
-                AddSunshine(-10);
+                AddWater(-15);
+                AddSunshine(-15);
+
                 return offspring;
             }
 

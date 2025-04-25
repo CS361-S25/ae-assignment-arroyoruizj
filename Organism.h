@@ -42,9 +42,9 @@ class Organism {
             health += _in;
         }
 
-        virtual void Process(int _health) {
+        virtual void Process(double _in) {
             
-            AddHealth(_health);
+            AddHealth(_in);
         
         }
 

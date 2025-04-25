@@ -29,7 +29,7 @@ class Cricket : public Organism {
             hunger += _in;
         }
 
-        int Getfitness() {
+        int GetFitness() {
 
             return fitness;
         }
@@ -39,7 +39,7 @@ class Cricket : public Organism {
             fitness = _fitness;
         }
 
-        void Process(double weather) {
+        void Process(double weather) override{
             
             if (weather < 0.5) { //rainy, we are in seattle
 
@@ -57,17 +57,25 @@ class Cricket : public Organism {
             }
 
             Organism::AddHealth(5);
-            AddHunger(5);
+
+            AddHunger(1);
         }
 
-        emp::Ptr<Organism> CheckReproduction() override{
+        void EatGrass(emp::Ptr<Organism> neighbor) {
 
-            if ((Organism::GetHealth() >= 50) && (hunger <= 25)) {
+            if (neighbor->GetType() == "Grass") {
+
+                AddHealth(10);
+                AddHunger(-5);
+            }
+        }
+
+        emp::Ptr<Organism> CheckReproduction() override {
+
+            if (Organism::GetHealth() >= 75 && hunger <= 25) {
 
                 emp::Ptr<Organism> offspring = new Cricket(Organism::GetRandom());
-                Organism::AddHealth(-50);
-                AddHunger(25);
-                SetFitness(1);
+                Organism::AddHealth(-750);
                 return offspring;
             }
 
