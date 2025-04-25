@@ -1,38 +1,25 @@
-#include <string>
+#ifndef ORG_H
+#define ORG_H
 
-#ifndef ORGANISM
-#define ORGANISM
+#include "emp/math/Random.hpp"
+#include "emp/tools/string_utils.hpp"
 
 class Organism {
-
     private:
-
-        double health;
+        double points;
         emp::Ptr<emp::Random> random;
 
+    public:
+    Organism(emp::Ptr<emp::Random> _random, double _points=0.0) :
+        points(_points), random(_random) {;}
 
-    public: 
+    void SetPoints(double _in) {points = _in;}
+    void AddPoints(double _in) {points += _in;}
 
-        Organism(double _health) : health(_health) {}
 
-        virtual std::string GetType() {
-
-            return "Organism";
-
-        }
-
-        virtual double GetHealth() {
-
-            return health;
-
-        }
-
-        void Process (double add_points) {
-
-            health = health + add_points;
-
-        }
-
+    void Process() {
+        std::cout << "Processing" << std::endl; //feel free to get rid of this
+       
+    }
 };
-
 #endif

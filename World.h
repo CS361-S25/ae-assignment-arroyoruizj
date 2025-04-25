@@ -5,7 +5,7 @@
 #include "emp/math/random_utils.hpp"
 #include "emp/math/Random.hpp"
 
-#include "Organism.h"
+#include "Org.h"
 
 class OrgWorld : public emp::World<Organism> {
 
@@ -14,34 +14,17 @@ class OrgWorld : public emp::World<Organism> {
 
     public:
 
-        OrgWorld(emp::Random &_random) : emp::World<Organism>(_random), random(_random) {
+    OrgWorld(emp::Random &_random) : emp::World<Organism>(_random), random(_random) {
+        random_ptr.New(_random);
+    }
 
-            random_ptr.New(_random);
+    ~OrgWorld() {
+    }
 
-        }
+  void Update() {
+      emp::World<Organism>::Update();
+      std::cout << "Updating!" << std::endl; //feel free to get rid of this     
+  }
 
-        ~OrgWorld() {}
-
-        void Update() {
-
-            emp::World<Organism>::Update();
-
-            emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
-
-            for (int i : schedule) {
-
-                if (!IsOccupied(i)) {
-
-                    continue;
-
-                }
-
-                Organism* org = pop[i];
-
-                org->Process(25);
-
-            }
-        }
 };
-
 #endif
