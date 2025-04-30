@@ -8,11 +8,10 @@ class Cricket : public Organism {
     private:
 
         int hunger;
-        int fitness;
 
     public:
 
-        Cricket(emp::Ptr<emp::Random> _random, double _health=10.0, double _hunger=0.0, int _fitness=1) : Organism(_random, _health), hunger(_hunger), fitness(_fitness) {}
+        Cricket(emp::Ptr<emp::Random> _random, double _health=10.0, double _hunger=0.0, int _fitness=1) : Organism(_random, _health), hunger(_hunger) {}
 
         std::string GetType() override{
 
@@ -29,36 +28,25 @@ class Cricket : public Organism {
             hunger += _in;
         }
 
-        int GetFitness() {
-
-            return fitness;
-        }
-
-        void SetFitness(int _fitness) {
-
-            fitness = _fitness;
-        }
-
         void Process(double weather) override{
             
             if (weather < 0.5) { //rainy, we are in seattle
 
-                SetFitness(1);
+                AddHunger(3);
             } 
 
             else if (weather < 0.85) { //cloud
 
-                SetFitness(2);
+                AddHunger(2);
             }
 
             else { //sunny
 
-                SetFitness(3);
+                AddHunger(3);
             }
 
             Organism::AddHealth(5);
-
-            AddHunger(1);
+            
         }
 
         void Eat(emp::Ptr<Organism> neighbor) override{

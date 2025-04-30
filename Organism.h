@@ -4,7 +4,6 @@
 #include "emp/math/Random.hpp"
 #include "emp/tools/string_utils.hpp"
 
-
 /**
  * @class Organism
  * @brief Represents a basic organism with health and random number generator.
@@ -52,15 +51,6 @@ class Organism {
 
             return random;
 
-        }
-
-        /**
-         * @brief Set the health of the organism.
-         * @param _in The new health value to set.
-         */
-        void SetHealth(double _in) {
-            
-            health = _in;
         }
 
         /**

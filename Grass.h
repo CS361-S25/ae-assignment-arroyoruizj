@@ -19,16 +19,6 @@ class Grass : public Organism {
             return "Grass";
         }
 
-        int GetWater() {
-
-            return water;
-        }
-
-        int GetSunshine() {
-
-            return sunshine;
-        }
-
         void AddSunshine(int _in) {
 
             sunshine += _in;

@@ -19,7 +19,7 @@ class AEAnimator : public emp::web::Animate {
     const double width{num_w_boxes * RECT_SIDE};
     const double height{num_h_boxes * RECT_SIDE};
 
-    const int num_crickets = ;
+    const int num_crickets = 7;
     const int num_grass_patches = 10;
 
     emp::web::Canvas canvas{width, height, "canvas"};
@@ -33,9 +33,10 @@ class AEAnimator : public emp::web::Animate {
         // along with a control button
 
         // Add a title and description to the document
+        //MAKE THIS LESS CRINGE BRO
         doc << "<h1>Crickets vs. Grass: A Brown Bunch's Lunch</h1>";
         doc << "<p>Our little  world is home to a community of brown mole crickets. Their </p>";
-        doc << "<p>lives are intertwined with the grass that carpets their underground domain. They munch.</p>";
+        doc << "<p>lives are intertwined with the grass. They munch.</p>";
         doc << "<p>on the green blades for sustenance, and as they do, the grass, in turn, continues to grow.</p>";
         doc << "<p>It's a delicate balance: the crickets need the grass to survive, and the grass, </p>";
         doc << "<p>though eaten, persists. Watch this simple cycle of brown and green unfold.</p>";
