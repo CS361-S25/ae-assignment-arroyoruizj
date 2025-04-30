@@ -26,21 +26,6 @@ class OrgWorld : public emp::World<Organism> {
         return weather;
     }
 
-    std::string GetWeather() {
-
-        if (weather < 0.5) { //rainy, we are in seattle
-            
-            return "Rainy";
-        } 
-
-        else if (weather < 0.85) { //cloud
-
-            return "Cloudy";
-        }
-
-        return "Sunny";
-    }
-
     void Update() {
 
         // First, let the base World class handle its updates
