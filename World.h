@@ -14,7 +14,10 @@ class OrgWorld : public emp::World<Organism> {
 
     public:
 
-    // Constructor: Initializes the world with a random number generator
+    /**
+     * @brief Constructor for the World class.
+     * @param _random Pointer to a random number generator.
+     */
     OrgWorld(emp::Random &_random) : emp::World<Organism>(_random), random(_random) {
         random_ptr.New(_random);
     }
@@ -22,15 +25,21 @@ class OrgWorld : public emp::World<Organism> {
     // Destructor: Cleans up resources
     ~OrgWorld() {}
 
-    // Updates the weather condition for the world
-    // This function generates a random value between 0 and 1 using the random number generator
-    // and assigns it to the `weather` variable. The updated weather value is then returned.
+    /**
+     * @brief Function to update the weather condition.
+     * @return The updated weather value.
+     */
     double UpdateWeather() {
         weather = random.GetDouble(0, 1); // Generate a random weather condition
         return weather; // Return the updated weather value
     }
 
-    // Main update function for the world
+     /**
+     * @brief Main update function for the world.
+     * World begins by updating weather for each "day" (step), simulating the effects of
+     * weather on the organisms. Then, we process if any crickets eat grass, and finally
+     * check if any organisms can reproduce.
+     */
     void Update() {
 
         // First, let the base World class handle its updates
@@ -50,14 +59,22 @@ class OrgWorld : public emp::World<Organism> {
         ProcessReproduction(repro_schedule);
     
     }
-
-    // Extracts an organism from the given position and sets the position to nullptr
+    /**
+     * @brief Function to get a random neighbor position for an organism.
+     * @param pos The current position of the organism.
+     * @return A random neighbor position.
+     */
     emp::Ptr<Organism> ExtractOrganism(int position) {
         emp::Ptr<Organism> organism = pop[position];
         pop[position] = nullptr;
         return organism;
     }
 
+    /**
+     * @brief Function to process the weather for each organism.
+     * @param _weather_sched The schedule of organisms to process.
+     * @param _weather The current weather condition.
+     */
     void ProcessWeather (emp::vector<size_t> _weather_sched, double _weather) {
 
         for (int i : _weather_sched) {
@@ -81,6 +98,10 @@ class OrgWorld : public emp::World<Organism> {
         }
     }
 
+    /**
+     * @brief Function to process the eating behavior of organisms.
+     * @param _eating_sched The schedule of organisms to process for eating.
+     */
     void ProcessEating (emp::vector<size_t> _eating_sched) {
 
         for (int i : _eating_sched) {
@@ -107,6 +128,10 @@ class OrgWorld : public emp::World<Organism> {
         }
     }
 
+    /**
+     * @brief Function to process the reproduction of organisms.
+     * @param _repro_sched The schedule of organisms to process for reproduction.
+     */
     void ProcessReproduction (emp::vector<size_t> _repro_sched) {
 
          // Loop through the reproduction schedule
